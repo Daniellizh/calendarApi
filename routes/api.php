@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\PassportAuthController;
+use App\Http\Controllers\API\CalendarController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,3 +26,5 @@ Route::post('login', [PassportAuthController::class, 'login']);
 Route::middleware('auth:api')->group(function () {
     Route::get('get-user', [PassportAuthController::class, 'userInfo']);
 });
+
+Route::resource('calendars', [CalendarController::class]);
