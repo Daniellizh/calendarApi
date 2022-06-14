@@ -2,8 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\API\PassportAuthController;
 use App\Http\Controllers\API\CalendarController;
+use App\Http\Controllers\Api\PassportAuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,15 +16,14 @@ use App\Http\Controllers\API\CalendarController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
 Route::post('register', [PassportAuthController::class, 'register']);
 Route::post('login', [PassportAuthController::class, 'login']);
   
 Route::middleware('auth:api')->group(function () {
     Route::get('get-user', [PassportAuthController::class, 'userInfo']);
+    Route::get('calendar', [CalendarController::class, 'index']);
+    Route::patch('calendar/{id}', [CalendarController::class,'update']);
+    Route::delete('calendar/{id}', [CalendarController::class,'destroy']);
 });
 
-Route::resource('calendars', [CalendarController::class]);
+    Route::post('calendar', [CalendarController::class, 'store']);
