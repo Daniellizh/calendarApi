@@ -1,17 +1,21 @@
 <?php
 namespace App\Http\Controllers\API;
+
 use App\Http\Controllers\Controller;
 use App\Models\Event;
 use Illuminate\Http\Request;
+use App\Http\Requests\CreateEventRequest;
+use App\Http\Requests\UpdateEventRequest;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Requests\EventRequest;
 
 class CalendarController extends Controller
 {
 
-public function index()
+public function index(Request $request)
 {
-    $calendars = Event::all();
+    $input = $request->all();
+    $calendars = Event::where('date_start', '>=', $input['date_start'])
+    ->where('date_end', '<=', $input['date_end'])->get();
     return response()->json([
         "success" => true,
         "message" => "Event List",
@@ -19,73 +23,56 @@ public function index()
 ]);
 }
 
-public function store(Request $request)
+public function store(CreateEventRequest $request)
 {
     $input = $request->all();
-    $validator  = Validator::make($input, [
-        'title' => 'required',
-        'description' => 'required',
-        'date_start' => 'required',
-        'date_end' => 'required'
-]);
-    // if($user = auth()->user()){
+        
+    if($user = auth()->user()){
         $calendar = Event::create($input);
         return response()->json([
             "success" => true,
             "message" => "Event created successfully.",
             "data" => $calendar
         ]);
-    // }else{
-    //    $calendars = Event::where('date_start', '<=', $input['date_start'])
-    //    ->where('date_start', '>=', $input['date_start'])
-    //    ->where('date_end', '<=', $input['date_end'])
-    //    ->where('date_end', '>=', $input['date_end'])->get();
-    //    if($user != auth()->user()){
-    //         return response() ->json([
-    //             "success" => false,
-    //             "message" => "Event no updated successfully.",
-    //             "data" => $calendars
-    //         ]);
-    //     }
-    // }
+    }else{
+       $calendars = Event::where('date_start', '<=', $input['date_start'])
+       ->where('date_start', '>=', $input['date_start'])
+       ->where('date_end', '<=', $input['date_end'])
+       ->where('date_end', '>=', $input['date_end'])->get();
+       if(!$calendars){
+        return response() ->json([
+            "success" => true,
+            "message" => "Event no updated successfully.",
+            "data" => $calendars
+        ]);
+       }else{
+            return response() ->json([
+                "success" => false,
+                "message" => "Event no updated successfully."
+            ]);
+        }
+            
+    }
 } 
 
-public function update(Request $request, Event $calendar)
+public function update(UpdateEventRequest $request, Event $event)
 {
     $input = $request->all();
-    $validator = Validator::make($input, [
-        'title' => 'required',
-        'description' => 'required',
-        'date_start' => 'required',
-        'date_end' => 'required'
-    ]);
-        $calendar->id = $input['id'];
-        $calendar->title = $input['title'];
-        $calendar->description = $input['description'];
-        $calendar->date_start = $input['date_start'];
-        $calendar->date_end = $input['date_end'];
-        $calendar->save();
+        $event->update($input);
             return response()->json([
             "success" => true,
             "message" => "Event updated successfully.",
-            "data" => $calendar
+            "data" => $event
             ]);
-    // if($validator->fails()){
-    //     return response()->json([
-    //         "success" => true,
-    //         "message" => "Event updated successfully.",
-    //         "data" => $calendar
-    //         ]);       
-    //     }
 }
 
-public function destroy(Event $calendar, $id)
+public function destroy(Event $event)
 {
-    $calendar = Event::destroy($id);
+    $event = Event::destroy($event->id);
     return response()->json([
         "success" => true,
         "message" => "Event deleted successfully.",
-        "data" => $calendar
+        "data" => $event
     ]);
 }
 }

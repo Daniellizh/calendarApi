@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Foundation\Http\FormRequest;
 
-class EventRequest extends JsonResource
+class GetEventRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -21,13 +21,10 @@ class EventRequest extends JsonResource
      *
      * @return array<string, mixed>
      */
-    public function rules($request)
+    public function rules()
     {
         return [
-            'title' => $this->id,
-            'description' => $this->description,
-            'date_start' => $this->date_start,
-            'date_end' => $this->date_end
+            //
         ];
     }
 }

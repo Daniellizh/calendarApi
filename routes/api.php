@@ -20,10 +20,12 @@ Route::post('register', [PassportAuthController::class, 'register']);
 Route::post('login', [PassportAuthController::class, 'login']);
   
 Route::middleware('auth:api')->group(function () {
+    ///
+});
+Route::group(['middleware' => ['cors', 'json.response']], function () {
     Route::get('get-user', [PassportAuthController::class, 'userInfo']);
     Route::get('calendar', [CalendarController::class, 'index']);
-    Route::patch('calendar/{id}', [CalendarController::class,'update']);
-    Route::delete('calendar/{id}', [CalendarController::class,'destroy']);
+    Route::patch('calendar/{event}', [CalendarController::class,'update']);
+    Route::delete('calendar/{event}', [CalendarController::class,'destroy']);
 });
-
     Route::post('calendar', [CalendarController::class, 'store']);
