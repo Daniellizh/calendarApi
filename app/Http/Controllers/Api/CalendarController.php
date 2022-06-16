@@ -15,8 +15,8 @@ class CalendarController extends Controller
 public function index(GetEventRequest $request)
 {
     $input = $request->all();
-    // $calendars = Event::where('date_start', '>=', $input['date_start'])
-    // ->where('date_end', '<=', $input['date_end'])->get();
+    $calendars = Event::where('date_start', '>=', $input['date_start'])
+    ->where('date_end', '<=', $input['date_end'])->get();
     $calendars = Event::all();
     return response()->json([
         "success" => true,
