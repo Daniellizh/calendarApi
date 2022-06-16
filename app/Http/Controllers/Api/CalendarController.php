@@ -66,7 +66,7 @@ public function update(UpdateEventRequest $request, Event $event)
     $st = $date1->addHours(3);
     $date2 = Carbon::parse($event['date_start']);
     $result = $st->gt($date2);
-    if($result){
+    if(!$result){
         $input = $request->all();
         $dt = Carbon::create($input['date_start']);
         $date_end = $dt->addMinute($input['duration']);
@@ -91,7 +91,7 @@ public function destroy(Event $event)
     $st = $date1->addHours(3);
     $date2 = Carbon::parse($event['date_start']);
     $result = $st->gt($date2);
-    if($result){
+    if(!$result){
         $event = Event::destroy($event->id);
         return response()->json([
             "success" => true,
