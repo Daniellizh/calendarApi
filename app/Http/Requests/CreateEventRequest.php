@@ -29,10 +29,10 @@ class CreateEventRequest extends FormRequest
             'title' => 'required|string',
             'description' => 'nullable|string',
             'date_start' => 'required|date',
-            'date_end' => 'required|date',
+            'duration' => 'required|integer'
         ];
     }
-
+    
     public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(response()->json([

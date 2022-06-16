@@ -1,9 +1,9 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\CalendarController;
-use App\Http\Controllers\Api\PassportAuthController;
+use App\Http\Controllers\Auth\ApiAuthController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -16,16 +16,17 @@ use App\Http\Controllers\Api\PassportAuthController;
 |
 */
 
-Route::post('register', [PassportAuthController::class, 'register']);
-Route::post('login', [PassportAuthController::class, 'login']);
-  
-Route::middleware('auth:api')->group(function () {
-    ///
-});
-Route::group(['middleware' => ['cors', 'json.response']], function () {
-    Route::get('get-user', [PassportAuthController::class, 'userInfo']);
+    Route::post('register', [ApiAuthController::class, 'register']);
+    Route::post('login', [ApiAuthController::class, 'login']);
+    
+Route::group(['middleware' => ['auth:api']], function () {
     Route::get('calendar', [CalendarController::class, 'index']);
     Route::patch('calendar/{event}', [CalendarController::class,'update']);
     Route::delete('calendar/{event}', [CalendarController::class,'destroy']);
 });
+
+Route::middleware('auth:api')->group(function () {
+    Route::post('/logout', [ApiAuthController::class, 'logout']);
+});
+
     Route::post('calendar', [CalendarController::class, 'store']);

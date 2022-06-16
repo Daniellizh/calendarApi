@@ -29,7 +29,7 @@ class UpdateEventRequest extends FormRequest
             'title' => 'nullable|string',
             'description' => 'nullable|string',
             'date_start' => 'nullable|date',
-            'date_end' => 'nullable|date'
+            'duration' => 'nullable|integer'
         ];
     }
 
